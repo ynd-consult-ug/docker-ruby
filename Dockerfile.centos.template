@@ -1,0 +1,40 @@
+FROM centos:{DISTRO_VERSION}
+
+RUN yum install -q -y \
+	https://yum.postgresql.org/11/redhat/rhel-{DISTRO_VERSION}-x86_64/pgdg-redhat-repo-latest.noarch.rpm \
+	epel-release
+
+# Install basic deps
+RUN yum install -q -y \
+  bash \
+  bc \
+  cups \
+  curl \
+  curl \
+  epel-release \
+  fontconfig \
+  git \
+  git-core \
+  graphviz \
+  jq \
+  less \
+  nc \
+  openssl \
+  postgresql11-11.7 \
+  postgresql11-devel-11.7 \
+  postgresql11-libs-11.7 \
+  ImageMagick ImageMagick-devel \
+  vim \
+  wget \
+  zip unzip \
+  xorg-x11-fonts-75dpi \
+  xorg-x11-fonts-Type1 && \
+  yum clean all
+
+# Install specific Ruby version via RVM and set it as default
+RUN curl -sSL https://rvm.io/mpapis.asc | gpg --import - && \
+    curl -sSL https://rvm.io/pkuczynski.asc | gpg --import - && \
+    curl -sSL https://get.rvm.io | bash -s stable && \
+    bash -lc 'rvm install {RUBY_VERSION};rvm alias create default {RUBY_VERSION}' && \
+    ruby --version; \
+  	gem --version
