@@ -131,6 +131,7 @@ RUN apk -q --update --no-cache add \
   openssh \
   bash \
   curl \
+  glib \
   curl-dev \
   jq \
   netcat-openbsd \
@@ -141,7 +142,20 @@ RUN apk -q --update --no-cache add \
   libxslt \
   libxslt-dev \
   nodejs \
+  libgcc \
+  libintl \
+  libstdc++ \
   graphviz \
-  yarn
+  libx11 \
+  libxrender \
+  libxext \
+  ttf-dejavu \
+  ttf-droid \
+  ttf-freefont \
+  ttf-liberation \
+  ttf-ubuntu-font-family \
+  yarn \
+  vim
 
 CMD [ "irb" ]
+
