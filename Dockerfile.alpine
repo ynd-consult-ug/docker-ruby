@@ -1,0 +1,57 @@
+ARG DISTRO_VERSION
+FROM alpine:${DISTRO_VERSION}
+
+RUN apk add --no-cache \
+	bc \
+	gmp-dev \
+  bash \
+  build-base \
+  curl \
+  curl-dev \
+  git \
+  glib \
+  graphviz \
+  jq \
+  less \
+  libgcc \
+  libintl \
+  libstdc++ \
+  libx11 \
+  libxext \
+  libxml2 \
+  libxml2-dev \
+  libxrender \
+  libxslt \
+  libxslt-dev \
+  netcat-openbsd \
+  nodejs \
+  openssh \
+  postgresql-client \
+  postgresql-dev \
+  ttf-dejavu \
+  ttf-droid \
+  ttf-freefont \
+  ttf-liberation \
+  ttf-ubuntu-font-family \
+  yarn \
+  vim
+
+ENV LANG C.UTF-8
+
+ARG RUBY_VERSION
+ARG RUBY_MAJOR
+
+COPY alpine.sh /tmp/alpine.sh
+
+RUN /tmp/alpine.sh && \
+	rm -f /tmp/alpine.sh
+
+ENV GEM_HOME /usr/local/bundle \
+	BUNDLE_SILENCE_ROOT_WARNING 1 \
+	BUNDLE_APP_CONFIG "$GEM_HOME" \
+	PATH $GEM_HOME/bin:$PATH
+
+RUN mkdir -p "$GEM_HOME" && chmod 777 "$GEM_HOME"
+
+CMD [ "irb" ]
+
