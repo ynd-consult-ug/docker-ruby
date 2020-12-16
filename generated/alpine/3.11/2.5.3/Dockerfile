@@ -155,6 +155,7 @@ RUN apk -q --update --no-cache add \
   ttf-liberation \
   ttf-ubuntu-font-family \
   yarn \
+  wkhtmltopdf-dev \
   vim
 
 CMD [ "irb" ]
