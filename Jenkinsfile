@@ -39,7 +39,7 @@ node('ynd') {
 
     CENTOS_VERSIONS.each{ os ->
       RUBY_VERSIONS.each { version ->
-        IMAGE_NAME = "${IMAGE_BASENAME}${version}-alpine${os}"
+        IMAGE_NAME = "${IMAGE_BASENAME}${version}-centos${os}"
         stage(IMAGE_NAME) {
           sh "docker build -t ${IMAGE_NAME} -f Dockerfile.centos" +
           " --build-arg DISTRO_VERSION=${os}" +
