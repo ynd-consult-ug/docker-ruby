@@ -1,7 +1,7 @@
 #!/bin/bash
 # Script is used to generate all the necessary Dockerfiles based on the templates
 
-declare -a ruby_versions=("2.5.3" "2.6.2" "2.6.3" "2.6.5")
+declare -a ruby_versions=("2.5.3" "2.6.2" "2.6.3" "2.6.5" "2.6.6")
 declare -a distributions=("alpine:3.11" "alpine:3.12" "centos:7")
 
 for i in "${distributions[@]}"
