@@ -19,6 +19,10 @@ CENTOS_VERSIONS = [
 ]
 
 node('ynd') {
+  stage('Fetch code') {
+    GIT = utils.checkoutRepository('git@github.com:ynd-consult-ug/docker-ruby.git')
+  }
+
   withDockerRegistry(credentialsId: 'hub.docker.com') {
     ALPINE_VERSIONS.each{ os ->
       RUBY_VERSIONS.each { version ->
