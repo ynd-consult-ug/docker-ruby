@@ -25,10 +25,10 @@ node('ynd') {
         IMAGE_NAME = "${IMAGE_BASENAME}${version}-alpine${os}"
         stage(IMAGE_NAME) {
           versionParts = version.tokenize('.')
-          sh "docker build -t ${IMAGE_NAME} -f Dockerfile.alpine ." +
+          sh "docker build -t ${IMAGE_NAME} -f Dockerfile.alpine" +
           " --build-arg DISTRO_VERSION=${os}" +
           " --build-arg RUBY_VERSION=${version}" +
-          " --build-arg RUBY_MAJOR=${versionParts[0]}.${versionParts[1]}"
+          " --build-arg RUBY_MAJOR=${versionParts[0]}.${versionParts[1]} ."
         }
       }
     }
@@ -37,9 +37,9 @@ node('ynd') {
       RUBY_VERSIONS.each { version ->
         IMAGE_NAME = "${IMAGE_BASENAME}${version}-alpine${os}"
         stage(IMAGE_NAME) {
-          sh "docker build -t ${IMAGE_NAME} -f Dockerfile.centos ." +
+          sh "docker build -t ${IMAGE_NAME} -f Dockerfile.centos" +
           " --build-arg DISTRO_VERSION=${os}" +
-          " --build-arg RUBY_VERSION=${version}"
+          " --build-arg RUBY_VERSION=${version} ."
         }
       }
     }
