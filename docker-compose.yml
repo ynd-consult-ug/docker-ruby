@@ -1,27 +1,15 @@
 version: '3.7'
 services:
-  ruby266-alpine312:
+  test-alpine:
     build:
       context: .
       dockerfile: Dockerfile.alpine
       args:
-        DISTRO_VERSION: 3.12
-        RUBY_MAJOR: 2.6
-        RUBY_VERSION: 2.6.6
-    image: ynd-consult-ug/docker-ruby:2.6.6-alpine3.12
-
-  ruby266-alpine311:
+        - RUBY_VERSION=2.6.6
+  
+  test-centos:
     build:
       context: .
-      dockerfile: Dockerfile.alpine
-      args:
-        DISTRO_VERSION: 3.11
-        RUBY_MAJOR: 2.6
-        RUBY_VERSION: 2.6.6
-    image: ynd-consult-ug/docker-ruby:2.6.6-alpine3.11
-
-  test:
-    build:
-      context: .
+      dockerfile: Dockerfile.centos
       args:
         - RUBY_VERSION=2.6.6

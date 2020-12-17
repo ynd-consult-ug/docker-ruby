@@ -31,8 +31,7 @@ node('ynd') {
           versionParts = version.tokenize('.')
           sh "docker build -t ${IMAGE_NAME} -f Dockerfile.alpine" +
           " --build-arg DISTRO_VERSION=${os}" +
-          " --build-arg RUBY_VERSION=${version}" +
-          " --build-arg RUBY_MAJOR=${versionParts[0]}.${versionParts[1]} ."
+          " --build-arg RUBY_VERSION=${version} ."
         }
       }
     }

@@ -1,13 +1,16 @@
-ARG DISTRO_VERSION
+ARG DISTRO_VERSION=3.12
 FROM alpine:${DISTRO_VERSION}
 
 RUN apk add --no-cache \
-	bc \
 	gmp-dev \
   bash \
+  bc \
   build-base \
+  busybox \
+  ca-certificates \
   curl \
   curl-dev \
+  gdbm-dev \
   git \
   glib \
   graphviz \
@@ -15,6 +18,7 @@ RUN apk add --no-cache \
   less \
   libgcc \
   libintl \
+  libssl1.1 \
   libstdc++ \
   libx11 \
   libxext \
@@ -23,35 +27,47 @@ RUN apk add --no-cache \
   libxrender \
   libxslt \
   libxslt-dev \
+  linux-headers \
+  musl-dev \
   netcat-openbsd \
   nodejs \
   openssh \
   postgresql-client \
   postgresql-dev \
+  readline-dev \
   ttf-dejavu \
   ttf-droid \
   ttf-freefont \
   ttf-liberation \
   ttf-ubuntu-font-family \
-  yarn \
-  vim
+  vim \
+  yaml-dev \
+  yarn
+
+ARG UID=1000
+
+RUN adduser -h /ruby -D -s /bin/bash -u $UID ruby
+
+USER ${UID}
+
+SHELL [ "/bin/bash", "-lc" ]
+
+RUN git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.8.0
 
 ENV LANG C.UTF-8
 
+RUN echo '. /ruby/.asdf/asdf.sh' >> ~/.bashrc && \
+  echo '. /ruby/.asdf/asdf.sh' >> ~/.bash_profile
+
 ARG RUBY_VERSION
-ARG RUBY_MAJOR
 
-COPY alpine.sh /tmp/alpine.sh
+ENV RUBY_EXTRA_CONFIGURE_OPTIONS="--enable-shared --disable-install-doc"
+RUN asdf plugin add ruby && \
+  asdf install ruby ${RUBY_VERSION} && \
+  asdf global ruby ${RUBY_VERSION}
 
-RUN /tmp/alpine.sh && \
-	rm -f /tmp/alpine.sh
+RUN gem install bundler
 
-ENV GEM_HOME /usr/local/bundle \
-	BUNDLE_SILENCE_ROOT_WARNING 1 \
-	BUNDLE_APP_CONFIG "$GEM_HOME" \
-	PATH $GEM_HOME/bin:$PATH
+ENV RAILS_ENV production
 
-RUN mkdir -p "$GEM_HOME" && chmod 777 "$GEM_HOME"
-
-CMD [ "irb" ]
-
+CMD ["/bin/bash"]
