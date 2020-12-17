@@ -19,3 +19,9 @@ services:
         RUBY_MAJOR: 2.6
         RUBY_VERSION: 2.6.6
     image: ynd-consult-ug/docker-ruby:2.6.6-alpine3.11
+
+  test:
+    build:
+      context: .
+      args:
+        - RUBY_VERSION=2.6.6
