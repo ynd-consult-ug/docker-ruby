@@ -1,6 +1,6 @@
 #!groovy
 
-IMAGE_BASENAME = 'ynd-consult-ug/docker-ruby:'
+IMAGE_BASENAME = 'yndconsult/docker-ruby:'
 RUBY_VERSIONS  = [
   '2.5.3',
   '2.6.2',
