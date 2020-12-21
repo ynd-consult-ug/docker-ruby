@@ -1,0 +1,18 @@
+version: '3.7'
+services:
+  test-alpine:
+    build:
+      context: .
+      dockerfile: Dockerfile.alpine
+      args:
+        - RUBY_VERSION=2.6.6
+    image: yndconsult/ruby:2.6.6-alpine3.12
+    
+  test-centos:
+    build:
+      context: .
+      dockerfile: Dockerfile.centos
+      args:
+        - RUBY_VERSION=2.6.6
+    image: yndconsult/ruby:2.6.6-centos7
+        

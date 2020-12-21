@@ -1,0 +1,71 @@
+ARG DISTRO_VERSION=7
+FROM centos:${DISTRO_VERSION}
+
+ARG DISTRO_VERSION
+
+RUN yum install -q -y \
+	https://yum.postgresql.org/11/redhat/rhel-${DISTRO_VERSION}-x86_64/pgdg-redhat-repo-latest.noarch.rpm \
+	epel-release
+
+RUN yum install -q -y \
+  autoconf \
+  automake \
+  bash \
+  bc \
+  bzip2 \
+  cups \
+  curl \
+  curl \
+  epel-release \
+  fontconfig \
+  gcc-c++ \
+  git \
+  git-core \
+  graphviz \
+  ImageMagick \
+  ImageMagick-devel \
+  jq \
+  less \
+  make \
+  nc \
+  openssl-devel \
+  postgresql11-11.7 \
+  postgresql11-devel-11.7 \
+  postgresql11-libs-11.7 \
+  readline-devel \
+  unzip \
+  vim \
+  wget \
+  xorg-x11-fonts-75dpi \
+  xorg-x11-fonts-Type1 \
+  zip && \
+  yum clean all
+
+ARG RUBY_VERSION
+
+
+ARG UID=1000
+
+RUN adduser -d /ruby -s /bin/bash -u $UID ruby
+
+USER ${UID}
+
+SHELL [ "/bin/bash", "-lc" ]
+
+RUN git clone https://github.com/asdf-vm/asdf.git /ruby/.asdf --branch v0.8.0
+
+ENV LANG C.UTF-8
+
+RUN echo '. /ruby/.asdf/asdf.sh' >> ~/.bashrc && \
+  echo '. /ruby/.asdf/asdf.sh' >> ~/.bash_profile
+
+ARG RUBY_VERSION
+
+ENV RUBY_EXTRA_CONFIGURE_OPTIONS="--enable-shared --disable-install-doc"
+RUN asdf plugin add ruby && \
+  asdf install ruby ${RUBY_VERSION} && \
+  asdf global ruby ${RUBY_VERSION}
+
+RUN gem install bundler
+
+CMD ["/bin/bash"]
