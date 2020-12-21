@@ -70,4 +70,4 @@ RUN gem install bundler
 
 ENV RAILS_ENV production
 
-CMD ["/bin/bash"]
+ENTRYPOINT [ "/bin/bash", "-lc" ]

@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile.alpine
       args:
         - RUBY_VERSION=2.6.6
-    image: yndconsult/ruby:2.6.6-alpine3.12
+    image: yndconsult/docker-ruby:2.6.6-alpine3.12
     
   test-centos:
     build:
@@ -14,5 +14,5 @@ services:
       dockerfile: Dockerfile.centos
       args:
         - RUBY_VERSION=2.6.6
-    image: yndconsult/ruby:2.6.6-centos7
+    image: yndconsult/docker-ruby:2.6.6-centos7
         
