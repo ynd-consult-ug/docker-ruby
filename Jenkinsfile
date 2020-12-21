@@ -33,6 +33,9 @@ node('ynd') {
           " --build-arg DISTRO_VERSION=${os}" +
           " --build-arg RUBY_VERSION=${version} ."
         }
+        stage("Push ${IMAGE_NAME}") {
+          sh "docker push ${IMAGE_NAME}"
+        }
       }
     }
 
@@ -43,6 +46,9 @@ node('ynd') {
           sh "docker build -t ${IMAGE_NAME} -f Dockerfile.centos" +
           " --build-arg DISTRO_VERSION=${os}" +
           " --build-arg RUBY_VERSION=${version} ."
+        }
+        stage("Push ${IMAGE_NAME}") {
+          sh "docker push ${IMAGE_NAME}"
         }
       }
     }
