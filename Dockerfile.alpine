@@ -67,7 +67,3 @@ RUN asdf plugin add ruby && \
   asdf global ruby ${RUBY_VERSION}
 
 RUN gem install bundler
-
-ENV RAILS_ENV production
-
-ENTRYPOINT [ "/bin/bash", "-l" ]
