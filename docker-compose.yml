@@ -5,14 +5,14 @@ services:
       context: .
       dockerfile: Dockerfile.alpine
       args:
-        - RUBY_VERSION=2.6.6
-    image: yndconsult/docker-ruby:2.6.6-alpine3.12
+        - RUBY_VERSION=2.6.2
+    image: yndconsult/docker-ruby:2.6.2-alpine
     
   test-centos:
     build:
       context: .
       dockerfile: Dockerfile.centos
       args:
-        - RUBY_VERSION=2.6.6
-    image: yndconsult/docker-ruby:2.6.6-centos7
+        - RUBY_VERSION=2.6.2
+    image: yndconsult/docker-ruby:2.6.2-centos7
         

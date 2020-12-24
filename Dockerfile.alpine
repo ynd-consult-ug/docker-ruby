@@ -44,20 +44,19 @@ RUN apk add --no-cache \
   yaml-dev \
   yarn
 
-ARG UID=1000
-
-RUN adduser -h /ruby -D -s /bin/bash -u $UID ruby
-
-USER ${UID}
-
 SHELL [ "/bin/bash", "-lc" ]
 
-RUN git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.8.0
+ENV ASDF_DATA_DIR /ruby/.asdf
 
-ENV LANG C.UTF-8
+RUN mkdir -p /ruby && \
+  git clone https://github.com/asdf-vm/asdf.git /ruby/.asdf --branch v0.8.0
+
+ENV LANG en_US.UTF-8
 
 RUN echo '. /ruby/.asdf/asdf.sh' >> ~/.bashrc && \
-  echo '. /ruby/.asdf/asdf.sh' >> ~/.bash_profile
+  echo '. /ruby/.asdf/asdf.sh' >> ~/.bash_profile && \
+  echo '. /ruby/.asdf/asdf.sh' >> /ruby/.bashrc && \
+  echo '. /ruby/.asdf/asdf.sh' >> /ruby/.bash_profile
 
 ARG RUBY_VERSION
 
