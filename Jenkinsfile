@@ -12,7 +12,8 @@ RUBY_VERSIONS  = [
 
 ALPINE_VERSIONS = [
   '3.11',
-  '3.12'
+  '3.12',
+  '3.13'
 ]
 
 CENTOS_VERSIONS = [
