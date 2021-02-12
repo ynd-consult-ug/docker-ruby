@@ -7,13 +7,4 @@ services:
       args:
         - RUBY_VERSION=2.6.2
         - RUBY_DOWNLOAD_SHA256=91fcde77eea8e6206d775a48ac58450afe4883af1a42e5b358320beb33a445fa
-        - DISTRO_VERSION=3.13
-    image: yndconsult/docker-ruby:2.6.2-alpine3.13
-    
-  test-centos:
-    build:
-      context: .
-      dockerfile: Dockerfile.centos
-      args:
-        - RUBY_VERSION=2.6.2
-    image: yndconsult/docker-ruby:2.6.2-centos7
+    image: yndconsult/docker-ruby:2.6.2
