@@ -1,69 +1,35 @@
-ARG DISTRO_VERSION=3.12
+ARG DISTRO_VERSION=3.13
 FROM alpine:${DISTRO_VERSION}
 
 RUN apk add --no-cache \
-	gmp-dev \
-  bash \
-  bc \
-  build-base \
-  busybox \
-  ca-certificates \
-  curl \
-  curl-dev \
-  gdbm-dev \
-  git \
-  glib \
-  graphviz \
-  jq \
-  less \
-  libgcc \
-  libintl \
-  libssl1.1 \
-  libstdc++ \
-  libx11 \
-  libxext \
-  libxml2 \
-  libxml2-dev \
-  libxrender \
-  libxslt \
-  libxslt-dev \
-  linux-headers \
-  musl-dev \
-  netcat-openbsd \
-  nodejs \
-  nodejs-npm \
-  openssh \
-  postgresql-client \
-  postgresql-dev \
-  readline-dev \
-  ttf-dejavu \
-  ttf-droid \
-  ttf-freefont \
-  ttf-liberation \
-  ttf-ubuntu-font-family \
-  vim \
-  yaml-dev \
-  yarn
+		gmp-dev \
+		bash
 
-SHELL [ "/bin/bash", "-lc" ]
+# skip installing gem documentation
+RUN set -eux; \
+	mkdir -p /usr/local/etc; \
+	{ \
+		echo 'install: --no-document'; \
+		echo 'update: --no-document'; \
+	} >> /usr/local/etc/gemrc
 
-ENV ASDF_DATA_DIR /ruby/.asdf
+COPY install.sh /tmp/install.sh
 
-RUN mkdir -p /ruby && \
-  git clone https://github.com/asdf-vm/asdf.git /ruby/.asdf --branch v0.8.0
+ENV LANG C.UTF-8
+ARG RUBY_VERSION=2.7.2
+ARG RUBY_DOWNLOAD_SHA256=1b95ab193cc8f5b5e59d2686cb3d5dcf1ddf2a86cb6950e0b4bdaae5040ec0d6
 
-ENV LANG en_US.UTF-8
+RUN /tmp/install.sh ${RUBY_VERSION} ${RUBY_DOWNLOAD_SHA256}
 
-RUN echo '. /ruby/.asdf/asdf.sh' >> ~/.bashrc && \
-  echo '. /ruby/.asdf/asdf.sh' >> ~/.bash_profile && \
-  echo '. /ruby/.asdf/asdf.sh' >> /ruby/.bashrc && \
-  echo '. /ruby/.asdf/asdf.sh' >> /ruby/.bash_profile
+ENV GEM_HOME /usr/local/bundle
+ENV BUNDLE_SILENCE_ROOT_WARNING=1 \
+	BUNDLE_APP_CONFIG="$GEM_HOME"
+ENV PATH $GEM_HOME/bin:$PATH
 
-ARG RUBY_VERSION
+RUN mkdir -p "$GEM_HOME" && chmod 777 "$GEM_HOME"
 
-ENV RUBY_EXTRA_CONFIGURE_OPTIONS="--enable-shared --disable-install-doc"
-RUN asdf plugin add ruby && \
-  asdf install ruby ${RUBY_VERSION} && \
-  asdf global ruby ${RUBY_VERSION}
-
-RUN gem install bundler
+RUN apk add --no-cache \
+		nodejs \
+		nodejs-npm \
+		yarn && \
+		gem install bundler
