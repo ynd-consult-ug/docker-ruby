@@ -22,7 +22,7 @@ node('ynd') {
       stage(IMAGE_NAME) {
         versionParts = version.tokenize('.')
         sh "docker build -t ${IMAGE_NAME} -f Dockerfile.alpine" +
-        " --build-arg RUBY_SHA=${sha}" +
+        " --build-arg RUBY_DOWNLOAD_SHA256=${sha}" +
         " --build-arg RUBY_VERSION=${version} ."
       }
       stage("Push ${IMAGE_NAME}") {
