@@ -16,6 +16,10 @@ node('ynd') {
     GIT = utils.checkoutRepository('git@github.com:ynd-consult-ug/docker-ruby.git')
   }
 
+  stage('Fetch alpine') {
+    sh 'docker pull alpine:3.13'
+  }
+
   withDockerRegistry(credentialsId: 'hub.docker.com') {
     RUBY_VERSIONS.each { version, sha ->
       IMAGE_NAME = "${IMAGE_BASENAME}${version}"
