@@ -31,5 +31,4 @@ RUN mkdir -p "$GEM_HOME" && chmod 777 "$GEM_HOME"
 RUN apk add --no-cache \
 		nodejs \
 		nodejs-npm \
-		yarn && \
-		gem install bundler
+		yarn

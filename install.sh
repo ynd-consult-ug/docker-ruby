@@ -132,6 +132,9 @@ rm -rf /usr/src/ruby
 
 [ "$(command -v ruby)" = '/usr/local/bin/ruby' ]
 
+gem install bundler
+
 ruby --version
 gem --version
 bundle --version
+
