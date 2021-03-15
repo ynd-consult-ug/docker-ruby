@@ -1,4 +1,13 @@
 #!groovy
+properties([
+  buildDiscarder(
+    logRotator(numToKeepStr: '5')
+  ),
+  disableResume(),
+  pipelineTriggers([
+    githubPush(),
+  ])
+])
 
 IMAGE_BASENAME = 'yndconsult/docker-ruby:'
 RUBY_VERSIONS  = [
