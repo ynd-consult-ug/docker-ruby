@@ -18,13 +18,13 @@ node('ynd') {
 
   try {
     stage('Hadolint checks') {
-      utils.hadolintChecks("Dockerfile")
+      security.hadolintChecks("Dockerfile")
     }
   } catch(err) {
-    stage('Send slack notification') {
-      slackSend channel: "#ops-notifications", message: "Build failed: ${env.JOB_NAME}. Hadolint checks failed. See logs for more information. <${env.BUILD_URL}>", color: "danger"
-    }
-    error "Hadolint checks failed. " + err
+      stage('Send slack notification') {
+        slackSend channel: "#ops-notifications", message: "Build failed: ${env.JOB_NAME}. Hadolint checks failed. See logs for more information. <${env.BUILD_URL}>", color: "danger"
+      }
+      error "Hadolint checks failed. ${err}" 
   }
 
   stage('Fetch alpine') {
