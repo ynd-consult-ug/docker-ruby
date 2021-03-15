@@ -27,26 +27,28 @@ node('ynd') {
       error "Hadolint checks failed. ${err}" 
   }
 
-  stage('Fetch alpine') {
-    sh 'docker pull alpine:3.13'
-  }
+  if(env.BRANCH_NAME == 'master') {
+    stage('Fetch alpine') {
+      sh 'docker pull alpine:3.13'
+    }
 
-  withDockerRegistry(credentialsId: 'hub.docker.com') {
-    RUBY_VERSIONS.each { version, sha ->
-      IMAGE_NAME = "${IMAGE_BASENAME}${version}"
-      stage(IMAGE_NAME) {
-        versionParts = version.tokenize('.')
-        sh "docker build -t ${IMAGE_NAME} -f Dockerfile.alpine" +
-        " --build-arg RUBY_DOWNLOAD_SHA256=${sha}" +
-        " --build-arg RUBY_VERSION=${version} ."
-      }
-      stage("Push ${IMAGE_NAME}") {
-        sh "docker push ${IMAGE_NAME}"
+    withDockerRegistry(credentialsId: 'hub.docker.com') {
+      RUBY_VERSIONS.each { version, sha ->
+        IMAGE_NAME = "${IMAGE_BASENAME}${version}"
+        stage(IMAGE_NAME) {
+          versionParts = version.tokenize('.')
+          sh "docker build -t ${IMAGE_NAME} -f Dockerfile.alpine" +
+          " --build-arg RUBY_DOWNLOAD_SHA256=${sha}" +
+          " --build-arg RUBY_VERSION=${version} ."
+        }
+        stage("Push ${IMAGE_NAME}") {
+          sh "docker push ${IMAGE_NAME}"
+        }
       }
     }
-  }
 
-  stage('Cleanup') {
-    cleanWs()
+    stage('Cleanup') {
+      cleanWs()
+    }
   }
 }
