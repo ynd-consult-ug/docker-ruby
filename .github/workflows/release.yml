@@ -1,0 +1,21 @@
+name: Generate release with changelog
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+          fetch-depth: 0
+    - name: Fetch all tags
+      run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+    - name: Push release
+      uses: docker://yndconsult/gitchangelog-action:latest
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        TAG_NAME: ${{ github.ref }}

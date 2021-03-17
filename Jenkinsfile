@@ -25,6 +25,9 @@ node('ynd') {
     GIT = utils.checkoutRepository('git@github.com:ynd-consult-ug/docker-ruby.git')
   }
 
+  DATE = new Date()
+  TAG  = DATE.format('YYYYMMdd')
+
   try {
     stage('Hadolint checks') {
       security.hadolintChecks('Dockerfile.alpine')
@@ -53,6 +56,14 @@ node('ynd') {
         stage("Push ${IMAGE_NAME}") {
           sh "docker push ${IMAGE_NAME}"
         }
+      }
+    }
+
+    stage('Create tag in git') {
+      if(!git.tagExists(TAG)) {
+        git.pushTag(TAG)
+      } else {
+        echo 'Not pushing tag as it already exists'
       }
     }
 
