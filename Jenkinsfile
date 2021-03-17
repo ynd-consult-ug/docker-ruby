@@ -25,8 +25,7 @@ node('ynd') {
     GIT = utils.checkoutRepository('git@github.com:ynd-consult-ug/docker-ruby.git')
   }
 
-  DATE = new Date()
-  TAG  = DATE.format('YYYYMMdd')
+  TAG  = (new Date()).format('YYYYMMdd')
 
   try {
     stage('Hadolint checks') {
