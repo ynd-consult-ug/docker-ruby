@@ -1,4 +1,13 @@
 #!groovy
+properties([
+  buildDiscarder(
+    logRotator(numToKeepStr: '5')
+  ),
+  disableResume(),
+  pipelineTriggers([
+    githubPush(),
+  ])
+])
 
 IMAGE_BASENAME = 'yndconsult/docker-ruby:'
 RUBY_VERSIONS  = [
@@ -16,26 +25,49 @@ node('ynd') {
     GIT = utils.checkoutRepository('git@github.com:ynd-consult-ug/docker-ruby.git')
   }
 
-  stage('Fetch alpine') {
-    sh 'docker pull alpine:3.13'
+  TAG  = (new Date()).format('YYYYMMdd')
+
+  try {
+    stage('Hadolint checks') {
+      security.hadolintChecks('Dockerfile.alpine')
+    }
+  } catch(err) {
+      stage('Send slack notification') {
+        slackSend channel: '#ops-notifications', message: "Build failed: ${env.JOB_NAME}. Hadolint checks failed. See logs for more information. <${env.BUILD_URL}>", color: 'danger'
+      }
+      error "Hadolint checks failed. ${err}" 
   }
 
-  withDockerRegistry(credentialsId: 'hub.docker.com') {
-    RUBY_VERSIONS.each { version, sha ->
-      IMAGE_NAME = "${IMAGE_BASENAME}${version}"
-      stage(IMAGE_NAME) {
-        versionParts = version.tokenize('.')
-        sh "docker build -t ${IMAGE_NAME} -f Dockerfile.alpine" +
-        " --build-arg RUBY_DOWNLOAD_SHA256=${sha}" +
-        " --build-arg RUBY_VERSION=${version} ."
-      }
-      stage("Push ${IMAGE_NAME}") {
-        sh "docker push ${IMAGE_NAME}"
+  if(env.BRANCH_NAME == 'master') {
+    stage('Fetch alpine') {
+      sh 'docker pull alpine:3.13'
+    }
+
+    withDockerRegistry(credentialsId: 'hub.docker.com') {
+      RUBY_VERSIONS.each { version, sha ->
+        IMAGE_NAME = "${IMAGE_BASENAME}${version}"
+        stage(IMAGE_NAME) {
+          versionParts = version.tokenize('.')
+          sh "docker build -t ${IMAGE_NAME} -f Dockerfile.alpine" +
+          " --build-arg RUBY_DOWNLOAD_SHA256=${sha}" +
+          " --build-arg RUBY_VERSION=${version} ."
+        }
+        stage("Push ${IMAGE_NAME}") {
+          sh "docker push ${IMAGE_NAME}"
+        }
       }
     }
-  }
 
-  stage('Cleanup') {
-    cleanWs()
+    stage('Create tag in git') {
+      if(!git.tagExists(TAG)) {
+        git.pushTag(TAG)
+      } else {
+        echo 'Not pushing tag as it already exists'
+      }
+    }
+
+    stage('Cleanup') {
+      cleanWs()
+    }
   }
 }
