@@ -1,9 +1,7 @@
 ARG DISTRO_VERSION=3.13
 FROM alpine:${DISTRO_VERSION}
 
-RUN apk add --no-cache \
-		gmp-dev \
-		bash
+RUN apk add --no-cache bash
 
 # skip installing gem documentation
 RUN set -eux; \
@@ -27,8 +25,3 @@ ENV BUNDLE_SILENCE_ROOT_WARNING=1 \
 ENV PATH $GEM_HOME/bin:$PATH
 
 RUN mkdir -p "$GEM_HOME" && chmod 777 "$GEM_HOME"
-
-RUN apk add --no-cache \
-		nodejs \
-		nodejs-npm \
-		yarn
