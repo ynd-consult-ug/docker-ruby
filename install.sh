@@ -7,7 +7,6 @@ RUBY_DOWNLOAD_SHA256=$2
 
 RUBY_MAJOR=$(echo ${RUBY_VERSION} | cut -d'.' -f -2 -)
 
-
 apk add --virtual .ruby-builddeps \
 		autoconf \
 		bison \
@@ -36,7 +35,6 @@ apk add --virtual .ruby-builddeps \
 		xz \
 		yaml-dev \
 		zlib-dev
-
 
 wget -O ruby.tar.xz "https://cache.ruby-lang.org/pub/ruby/${RUBY_MAJOR%-rc}/ruby-$RUBY_VERSION.tar.xz"
 echo "$RUBY_DOWNLOAD_SHA256 *ruby.tar.xz" | sha256sum --check --strict
@@ -81,7 +79,6 @@ apk add --virtual .ruby-rundeps \
   yaml-dev \
   zlib-dev \
   gmp-dev \
-  bash \
   bc \
   build-base \
   busybox \
@@ -107,6 +104,7 @@ apk add --virtual .ruby-rundeps \
   libxslt-dev \
   linux-headers \
   musl-dev \
+  shared-mime-info \
   netcat-openbsd \
   nodejs \
   nodejs-npm \
@@ -137,4 +135,3 @@ gem install bundler
 ruby --version
 gem --version
 bundle --version
-
